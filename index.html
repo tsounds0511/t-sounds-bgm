@@ -205,83 +205,92 @@
         <div id="track-list"></div>
     </div>
 
-    <script>
-        // ★GASのURL★
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
-        
-        let allTracks = []; // 全曲データを保持する配列
+  // ★ここにGASのURLを貼り付けてください★
+const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
 
-        async function fetchTracks() {
-            try {
-                const response = await fetch(API_URL);
-                allTracks = await response.json();
-                document.getElementById('loading').style.display = 'none';
-                renderTracks('all');
-            } catch (error) {
-                console.error('通信エラー:', error);
-                document.getElementById('loading').innerText = 'データの読み込みに失敗しました。';
-            }
-        }
+let allTracks = []; 
 
-        function renderTracks(filterTag) {
-            const trackList = document.getElementById('track-list');
-            trackList.innerHTML = ''; // リストを一旦クリア
+async function fetchTracks() {
+    try {
+        const response = await fetch(API_URL);
+        allTracks = await response.json();
+        document.getElementById('loading').style.display = 'none';
 
-            // フィルター処理
-            const filteredTracks = filterTag === 'all' 
-                ? allTracks 
-                : allTracks.filter(track => track.tags.includes(filterTag));
+        // URLの末尾からパラメータ（例: ?v=QJc3yJfXgd8）を取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetVid = urlParams.get('v');
 
-            filteredTracks.forEach(track => {
-                const tagsHtml = track.tags.split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join('');
-
-                const cardHtml = `
-                    <div class="track-card">
-                        <!-- maxresdefault.jpg を使用 -->
-                        <img src="https://img.youtube.com/vi/${track.youtube_id}/maxresdefault.jpg" class="thumbnail" alt="サムネイル">
-                        
-                        <div class="track-info">
-                            <h2 class="track-title">${track.title}</h2>
-                            <div>${tagsHtml}</div>
-                        </div>
-
-                        <div class="controls">
-                            <!-- 3. コア機能: フル音源試聴 -->
-                            <audio controls controlsList="nodownload">
-                                <source src="${track.preview_url}" type="audio/mpeg">
-                            </audio>
-                            
-                            <div class="action-buttons">
-                                <!-- 3. コア機能: YouTube導線 -->
-                                <a href="https://www.youtube.com/watch?v=${track.youtube_id}" target="_blank" class="yt-link">▶ YouTube</a>
-                                <!-- 3. コア機能: 直接ダウンロード (download属性) -->
-                                <a href="${track.preview_url}" download class="download-btn">Download</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                trackList.insertAdjacentHTML('beforeend', cardHtml);
-            });
-        }
-
-        // フィルターボタンの切り替えアニメーション
-        function filterTracks(tag) {
+        if (targetVid) {
+            // URL指定がある場合、該当する曲だけを表示
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            renderTracks(tag);
+            const filtered = allTracks.filter(track => track.youtube_id === targetVid);
+            renderTrackCards(filtered);
+        } else {
+            // 通常アクセス時はすべて表示
+            renderTracks('all');
         }
+    } catch (error) {
+        console.error('通信エラー:', error);
+        document.getElementById('loading').innerText = 'データの読み込みに失敗しました。';
+    }
+}
 
-        // 3. コア機能: 排他制御（どれかが再生されたら他を止める）
-        document.addEventListener('play', function(e){
-            const audios = document.getElementsByTagName('audio');
-            for(let i = 0, len = audios.length; i < len;i++){
-                if(audios[i] != e.target){
-                    audios[i].pause();
-                }
-            }
-        }, true);
+// フィルターボタン用の関数
+function filterTracks(tag) {
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    const filteredTracks = tag === 'all' 
+        ? allTracks 
+        : allTracks.filter(track => track.tags.includes(tag));
+        
+    renderTrackCards(filteredTracks);
+}
 
-        fetchTracks();
-    </script>
+// 画面にHTMLを描画する共通関数
+function renderTrackCards(tracks) {
+    const trackList = document.getElementById('track-list');
+    trackList.innerHTML = ''; 
+
+    if (tracks.length === 0) {
+        trackList.innerHTML = '<p style="text-align:center; color:#86868b;">楽曲が見つかりませんでした。</p>';
+        return;
+    }
+
+    tracks.forEach(track => {
+        const tagsHtml = track.tags.split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join('');
+        const cardHtml = `
+            <div class="track-card">
+                <img src="https://img.youtube.com/vi/${track.youtube_id}/maxresdefault.jpg" class="thumbnail" alt="サムネイル">
+                <div class="track-info">
+                    <h2 class="track-title">${track.title}</h2>
+                    <div>${tagsHtml}</div>
+                </div>
+                <div class="controls">
+                    <audio controls controlsList="nodownload">
+                        <source src="${track.preview_url}" type="audio/mpeg">
+                    </audio>
+                    <div class="action-buttons">
+                        <a href="https://www.youtube.com/watch?v=${track.youtube_id}" target="_blank" class="yt-link">▶ YouTubeでループ再生する</a>
+                        <a href="${track.preview_url}" download class="download-btn">Download</a>
+                    </div>
+                </div>
+            </div>
+        `;
+        trackList.insertAdjacentHTML('beforeend', cardHtml);
+    });
+}
+
+// 排他制御（どれかが再生されたら他を止める）
+document.addEventListener('play', function(e){
+    const audios = document.getElementsByTagName('audio');
+    for(let i = 0, len = audios.length; i < len;i++){
+        if(audios[i] != e.target){
+            audios[i].pause();
+        }
+    }
+}, true);
+
+fetchTracks();
 </body>
 </html>
