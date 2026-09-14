@@ -83,16 +83,31 @@
             align-items: center;
             margin-bottom: 16px;
         }
-        .featured-badge {
-            background: #fb0100;
-            color: white;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 50px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+/* ランダムピックアップの動的バッジ */
+.featured-badge {
+    background: linear-gradient(135deg, #fb0100 0%, #ff4d4d 100%);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(251, 1, 0, 0.3);
+    animation: badgePulse 2.5s infinite ease-in-out;
+}
+
+/* 呼吸するように優しく光るアニメーション */
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(251, 1, 0, 0.3);
+    }
+    50% {
+        transform: scale(1.04);
+        box-shadow: 0 4px 16px rgba(251, 1, 0, 0.6);
+    }
+}
         .shuffle-btn {
             background: #ffffff;
             border: 1px solid #e8e8ed;
