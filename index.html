@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T-Sounds | Premium Free BGM Library</title>
+    
+    <!-- タブアイコン（ファビコン）設定 -->
+    <link rel="icon" href="./logo.png" type="image/png">
+
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
@@ -22,7 +26,7 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 12px 20px;
+            padding: 10px 20px;
         }
         .nav-container {
             max-width: 900px;
@@ -37,6 +41,13 @@
             color: #1d1d1f;
             text-decoration: none;
             letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-logo img {
+            height: 22px;
+            width: auto;
         }
         .nav-logo span { color: #fb0100; }
         .nav-links {
@@ -58,14 +69,26 @@
             margin: 0 auto;
             padding: 40px 20px 0 20px;
         }
+        
+        /* メインヘッダー */
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
+        .header-logo {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
         .header h1 {
             color: #1d1d1f;
-            margin-bottom: 5px;
+            margin: 0 0 5px 0;
             font-size: 32px;
+        }
+        .header p {
+            margin: 0;
+            color: #6e6e73;
         }
 
         /* ランダムピックアップエリア */
@@ -83,46 +106,38 @@
             align-items: center;
             margin-bottom: 16px;
         }
-/* 輝くランダムピックアップバッジ */
-.featured-badge {
-    position: relative;
-    overflow: hidden; /* 光がバッジの外にはみ出さないように制御 */
-    background: #fb0100;
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 50px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    box-shadow: 0 2px 8px rgba(251, 1, 0, 0.3);
-}
+        
+        /* 輝くランダムピックアップバッジ */
+        .featured-badge {
+            position: relative;
+            overflow: hidden;
+            background: #fb0100;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(251, 1, 0, 0.3);
+        }
+        .featured-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: skewX(-25deg);
+            animation: badgeShine 3.5s infinite;
+        }
+        @keyframes badgeShine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
 
-/* バッジ表面を通過する光の筋（擬似要素） */
-.featured-badge::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-    transform: skewX(-25deg); /* 光を斜めに傾ける */
-    animation: badgeShine 3.5s infinite;
-}
-
-/* 光の移動アニメーション（サッと通過して約3秒待機するループ） */
-@keyframes badgeShine {
-    0% {
-        left: -100%;
-    }
-    20% {
-        left: 200%;
-    }
-    100% {
-        left: 200%;
-    }
-}
         .shuffle-btn {
             background: #ffffff;
             border: 1px solid #e8e8ed;
@@ -255,7 +270,7 @@
         .download-btn { background-color: #fb0100; color: white; }
         .download-btn:hover { background-color: #d90100; }
 
-        /* モーダル（ポップアップ窓） */
+        /* モーダル */
         .modal {
             display: none;
             position: fixed;
@@ -296,7 +311,6 @@
             .nav-links { gap: 12px; }
             .nav-link { font-size: 12px; }
         }
-        <link rel="icon" href="./logo.png" type="image/png">
     </style>
 </head>
 <body>
@@ -304,7 +318,10 @@
     <!-- ヘッダーナビゲーション -->
     <header class="nav-bar">
         <div class="nav-container">
-            <a href="#" class="nav-logo">T-Sounds <span>BGM</span></a>
+            <a href="#" class="nav-logo">
+                <img src="./logo.png" alt="Logo">
+                T-Sounds <span>BGM</span>
+            </a>
             <nav class="nav-links">
                 <span class="nav-link" onclick="openModal('modal-terms')">利用規約</span>
                 <span class="nav-link" onclick="openModal('modal-privacy')">プライバシーポリシー</span>
@@ -314,7 +331,9 @@
     </header>
 
     <div class="container">
+        <!-- メインヘッダー（ロゴ入り） -->
         <div class="header">
+            <img src="./logo.png" alt="T-Sounds Logo" class="header-logo">
             <h1>T-Sounds</h1>
             <p>Premium Free BGM Library</p>
         </div>
@@ -322,8 +341,8 @@
         <!-- 本日のランダムピックアップ -->
         <div id="featured-container" class="featured-section" style="display: none;">
             <div class="featured-header">
-                <span class="featured-badge">Today's Pick Up</span>
-                <button class="shuffle-btn" onclick="renderRandomFeatured()">シャッフル</button>
+                <span class="featured-badge">✨ Today's Pick Up</span>
+                <button class="shuffle-btn" onclick="renderRandomFeatured()">🎲 シャッフル</button>
             </div>
             <div id="featured-card-slot"></div>
         </div>
@@ -342,7 +361,10 @@
             <button class="filter-btn" onclick="filterTracks('ピアノ', this)">ピアノ</button>
         </div>
 
-        <div id="loading" style="text-align: center; color: #86868b;">楽曲データを読み込んでいます...</div>
+        <div id="loading" style="text-align: center; color: #86868b; padding: 40px 0;">
+            <img src="./logo.png" alt="Loading..." style="width: 40px; height: 40px; opacity: 0.6; margin-bottom: 12px; animation: badgeShine 2s infinite ease-in-out;"><br>
+            楽曲データを読み込んでいます...
+        </div>
         <div id="track-list"></div>
     </div>
 
@@ -398,7 +420,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         
         let allTracks = []; 
         let currentTag = 'all';
@@ -418,7 +440,7 @@
                     renderTrackCards(filtered);
                 } else {
                     renderTrackCards(allTracks);
-                    renderRandomFeatured(); // ランダムピックアップの表示
+                    renderRandomFeatured();
                 }
             } catch (error) {
                 console.error('通信エラー:', error);
@@ -426,7 +448,6 @@
             }
         }
 
-        // ランダムピックアップを表示する関数
         function renderRandomFeatured() {
             if (allTracks.length === 0) return;
             const randomIndex = Math.floor(Math.random() * allTracks.length);
@@ -464,7 +485,6 @@
             applyFilters();
         }
 
-        // カードの共通HTML生成関数
         function createCardHTML(track) {
             const tagsArray = track.tags ? track.tags.split(',') : [];
             const tagsHtml = tagsArray.map(tag => `<span class="tag" onclick="filterTracks('${tag.trim()}', null)">${tag.trim()}</span>`).join('');
@@ -505,18 +525,15 @@
             });
         }
 
-        // モーダル制御
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // 背景クリックでモーダルを閉じる
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.style.display = 'none';
             }
         };
 
-        // 音声の排他制御
         document.addEventListener('play', function(e){
             const audios = document.getElementsByTagName('audio');
             for(let i = 0, len = audios.length; i < len;i++){
