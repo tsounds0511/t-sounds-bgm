@@ -73,7 +73,7 @@
             display: none;
             background: none;
             border: none;
-            font-size: 20px;
+            font-size: 18px;
             color: #1d1d1f;
             cursor: pointer;
             padding: 4px;
@@ -100,10 +100,12 @@
             color: #1d1d1f;
             margin: 0 0 5px 0;
             font-size: 32px;
+            letter-spacing: -0.5px;
         }
         .header p {
             margin: 0;
             color: #6e6e73;
+            font-size: 14px;
         }
 
         /* ランダムピックアップエリア */
@@ -122,7 +124,7 @@
             margin-bottom: 16px;
         }
         
-        /* 輝くランダムピックアップバッジ */
+        /* ランダムピックアップバッジ */
         .featured-badge {
             position: relative;
             overflow: hidden;
@@ -163,9 +165,6 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         .shuffle-btn:hover {
             border-color: #fb0100;
@@ -212,6 +211,7 @@
         }
         .filter-btn:hover { background-color: #e8e8ed; }
         .filter-btn.active { background-color: #fb0100; color: white; }
+        .filter-btn.keep-filter.active { background-color: #1d1d1f; color: white; }
 
         /* トラックカード */
         .track-card {
@@ -265,26 +265,41 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 16px;
-            min-width: 260px;
+            min-width: 280px;
         }
         audio { height: 36px; width: 100%; outline: none; }
-        .action-buttons { display: flex; gap: 10px; width: 100%; }
-        .yt-link, .download-btn {
+        .action-buttons { display: flex; gap: 8px; width: 100%; }
+        
+        .yt-link, .keep-btn, .download-btn {
             color: #1d1d1f;
             text-decoration: none;
-            padding: 10px 14px;
+            padding: 10px 12px;
             border-radius: 50px;
             font-size: 12px;
             font-weight: 600;
             text-align: center;
-            flex: 1;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
             cursor: pointer;
             border: none;
+            white-space: nowrap;
         }
-        .yt-link { background-color: #f5f5f7; }
+        .yt-link { background-color: #f5f5f7; flex: 1.2; }
         .yt-link:hover { background-color: #e8e8ed; }
-        .download-btn { background-color: #fb0100; color: white; }
+        
+        /* キープボタン（比較用） */
+        .keep-btn { 
+            background-color: #f5f5f7; 
+            border: 1px solid #e8e8ed; 
+            flex: 0.9;
+        }
+        .keep-btn:hover { background-color: #e8e8ed; }
+        .keep-btn.active {
+            background-color: #1d1d1f;
+            color: white;
+            border-color: #1d1d1f;
+        }
+
+        .download-btn { background-color: #fb0100; color: white; flex: 1; }
         .download-btn:hover { background-color: #d90100; }
 
         /* モーダル */
@@ -318,8 +333,9 @@
             width: 32px; height: 32px; border-radius: 50%;
             cursor: pointer; font-weight: bold; color: #555;
         }
-        .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+        .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
         .modal-body { font-size: 14px; line-height: 1.6; color: #333; }
+        .modal-body h3 { font-size: 15px; margin-top: 20px; border-bottom: 1px solid #e8e8ed; padding-bottom: 6px; }
 
         /* ダウンロードモーダル用デザイン */
         .credit-box {
@@ -414,7 +430,7 @@
                 T-Sounds <span>BGM</span>
             </a>
             
-            <button class="hamburger-btn" onclick="toggleMenu()" aria-label="メニューを開く">☰</button>
+            <button class="hamburger-btn" onclick="toggleMenu()" aria-label="メニューを開く">Menu</button>
 
             <nav class="nav-links" id="nav-links">
                 <span class="nav-link" onclick="openModal('modal-terms')">利用規約</span>
@@ -435,8 +451,8 @@
         <!-- 本日のランダムピックアップ -->
         <div id="featured-container" class="featured-section" style="display: none;">
             <div class="featured-header">
-                <span class="featured-badge">✨ Today's Pick Up</span>
-                <button class="shuffle-btn" onclick="renderRandomFeatured()">🎲 シャッフル</button>
+                <span class="featured-badge">Today's Pick Up</span>
+                <button class="shuffle-btn" onclick="renderRandomFeatured()">シャッフル</button>
             </div>
             <div id="featured-card-slot"></div>
         </div>
@@ -446,9 +462,10 @@
             <input type="text" id="search-input" class="search-input" placeholder="キーワード・タイトル・タグで検索..." oninput="onSearchInput()">
         </div>
 
-        <!-- タグフィルター -->
+        <!-- タグフィルター ＋ キープ（比較）フィルター -->
         <div class="filters" id="filter-container">
             <button class="filter-btn active" onclick="filterTracks('all', this)">すべて</button>
+            <button class="filter-btn keep-filter" id="filter-keep-btn" onclick="filterTracks('keep', this)">キープ (0)</button>
             <button class="filter-btn" onclick="filterTracks('集中', this)">集中</button>
             <button class="filter-btn" onclick="filterTracks('Vlog', this)">Vlog</button>
             <button class="filter-btn" onclick="filterTracks('ゲーム', this)">ゲーム</button>
@@ -465,9 +482,9 @@
     <!-- モーダル：ダウンロード感謝 ＆ チャンネル登録誘導 -->
     <div id="modal-download" class="modal">
         <div class="modal-content" style="text-align: center;">
-            <button class="modal-close" onclick="closeDownloadModal()">✕</button>
+            <button class="modal-close" onclick="closeDownloadModal()">×</button>
             <img src="./logo.png" alt="Logo" style="width: 48px; height: 48px; margin-bottom: 12px;">
-            <div class="modal-title">ダウンロードありがとうございます！</div>
+            <div class="modal-title">ダウンロードありがとうございます</div>
             <div class="modal-body">
                 <p style="margin: 0 0 16px 0; color: #6e6e73;">クレジット表記をしていただくと活動の励みになります（任意）。</p>
                 
@@ -477,7 +494,7 @@
                 </div>
 
                 <a href="https://www.youtube.com/@t-sounds0511?sub_confirmation=1" target="_blank" class="yt-sub-btn">
-                    ▶ YouTubeチャンネル登録で応援する
+                    YouTubeチャンネル登録
                 </a>
 
                 <div class="dont-show-container">
@@ -492,24 +509,24 @@
     <!-- モーダル：利用規約 -->
     <div id="modal-terms" class="modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal-terms')">✕</button>
+            <button class="modal-close" onclick="closeModal('modal-terms')">×</button>
             <div class="modal-title">利用規約（ガイドライン）</div>
             <div class="modal-body">
                 <p>T-Soundsで配信している音源は、個人・商用を問わず無料でご利用いただけます。</p>
-                <h3>⭕ 可能なこと</h3>
+                <h3>許可されている範囲</h3>
                 <ul>
                     <li>YouTube、TikTok、配信、Vlog、ゲーム実況などの背景音楽としての使用</li>
                     <li>動画コンテンツの商用化・収益化</li>
                     <li>動画の尺に合わせたカットやフェード処理などの簡易な編集</li>
                 </ul>
-                <h3>❌ 禁止事項</h3>
+                <h3>禁止事項</h3>
                 <ul>
                     <li>音源自体の二次配布、転売、JASRAC等への著作権登録</li>
-                    <li>「作業用BGMまとめ」など、音楽メインのコンテンツとしての再アップロード</li>
+                    <li>作業用BGMまとめなど、音楽メインのコンテンツとしての再アップロード</li>
                     <li>公序良俗に反するコンテンツや違法行為への使用</li>
                 </ul>
                 <h3>クレジット表記について</h3>
-                <p>クレジット表記は任意ですが、概要欄などに「BGM: T-Sounds」と記載していただけると活動の励みになります！</p>
+                <p>クレジット表記は任意ですが、概要欄などに「BGM: T-Sounds」と記載していただけると幸いです。</p>
             </div>
         </div>
     </div>
@@ -517,11 +534,11 @@
     <!-- モーダル：プライバシーポリシー -->
     <div id="modal-privacy" class="modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal-privacy')">✕</button>
+            <button class="modal-close" onclick="closeModal('modal-privacy')">×</button>
             <div class="modal-title">プライバシーポリシー</div>
             <div class="modal-body">
                 <p>当サイトでは、サービスの改善およびアクセスの解析のためにアクセスログ等を取得する場合がありますが、個人を特定する情報の収集・保持は行っておりません。</p>
-                <p>取得した情報はサイトの利便性向上および統計的な分析にのみ使用し、第三者への提供は行いません。</p>
+                <p>取得した情報はサイトの利便利向上および統計的な分析にのみ使用し、第三者への提供は行いません。</p>
             </div>
         </div>
     </div>
@@ -529,7 +546,7 @@
     <!-- モーダル：お問い合わせ -->
     <div id="modal-contact" class="modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal-contact')">✕</button>
+            <button class="modal-close" onclick="closeModal('modal-contact')">×</button>
             <div class="modal-title">お問い合わせ</div>
             <div class="modal-body">
                 <p>楽曲に関するご質問、使用のご報告、楽曲制作のご依頼などは、YouTubeチャンネルの概要欄、または公式SNS/連絡先よりご連絡ください。</p>
@@ -541,16 +558,19 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         
         let allTracks = []; 
         let currentTag = 'all';
+        let keptTrackIds = JSON.parse(localStorage.getItem('keptTrackIds') || '[]');
 
         async function fetchTracks() {
             try {
                 const response = await fetch(API_URL);
                 allTracks = await response.json();
                 document.getElementById('loading').style.display = 'none';
+
+                updateKeepBadgeCount();
 
                 const urlParams = new URLSearchParams(window.location.search);
                 const targetVid = urlParams.get('v');
@@ -569,6 +589,36 @@
             }
         }
 
+        /* --------------------------------------------------
+           キープ（比較リスト）機能
+        -------------------------------------------------- */
+        function toggleKeep(youtubeId) {
+            const index = keptTrackIds.indexOf(youtubeId);
+            if (index === -1) {
+                keptTrackIds.push(youtubeId);
+            } else {
+                keptTrackIds.splice(index, 1);
+            }
+            localStorage.setItem('keptTrackIds', JSON.stringify(keptTrackIds));
+            updateKeepBadgeCount();
+            applyFilters();
+
+            // ランダムピックアップのカードも最新のキープ状態を反映
+            const featuredSlot = document.getElementById('featured-card-slot');
+            if (featuredSlot.children.length > 0) {
+                const currentFeaturedId = featuredSlot.querySelector('.download-btn')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                const track = allTracks.find(t => t.preview_url === currentFeaturedId);
+                if (track) featuredSlot.innerHTML = createCardHTML(track);
+            }
+        }
+
+        function updateKeepBadgeCount() {
+            const keepBtn = document.getElementById('filter-keep-btn');
+            if (keepBtn) {
+                keepBtn.innerText = `キープ (${keptTrackIds.length})`;
+            }
+        }
+
         function renderRandomFeatured() {
             if (allTracks.length === 0) return;
             const randomIndex = Math.floor(Math.random() * allTracks.length);
@@ -583,7 +633,15 @@
             const keyword = document.getElementById('search-input').value.toLowerCase().trim();
             
             const filtered = allTracks.filter(track => {
-                const matchesTag = currentTag === 'all' || track.tags.includes(currentTag);
+                let matchesTag = false;
+                if (currentTag === 'all') {
+                    matchesTag = true;
+                } else if (currentTag === 'keep') {
+                    matchesTag = keptTrackIds.includes(track.youtube_id);
+                } else {
+                    matchesTag = track.tags ? track.tags.includes(currentTag) : false;
+                }
+
                 const titleMatch = track.title ? track.title.toLowerCase().includes(keyword) : false;
                 const tagMatch = track.tags ? track.tags.toLowerCase().includes(keyword) : false;
                 const descMatch = track.description ? track.description.toLowerCase().includes(keyword) : false;
@@ -610,6 +668,10 @@
             const tagsArray = track.tags ? track.tags.split(',') : [];
             const tagsHtml = tagsArray.map(tag => `<span class="tag" onclick="filterTracks('${tag.trim()}', null)">${tag.trim()}</span>`).join('');
             const descHtml = track.description ? `<p class="track-desc">${track.description}</p>` : '';
+            
+            const isKept = keptTrackIds.includes(track.youtube_id);
+            const keepText = isKept ? 'キープ中' : 'キープ';
+            const keepClass = isKept ? 'keep-btn active' : 'keep-btn';
 
             return `
                 <div class="track-card">
@@ -624,7 +686,8 @@
                             <source src="${track.preview_url}" type="audio/mpeg">
                         </audio>
                         <div class="action-buttons">
-                            <a href="https://www.youtube.com/watch?v=${track.youtube_id}" target="_blank" class="yt-link">▶ YouTube</a>
+                            <a href="https://www.youtube.com/watch?v=${track.youtube_id}" target="_blank" class="yt-link">YouTubeで再生</a>
+                            <button onclick="toggleKeep('${track.youtube_id}')" class="${keepClass}">${keepText}</button>
                             <button onclick="handleDownload('${track.preview_url}')" class="download-btn">Download</button>
                         </div>
                     </div>
@@ -637,7 +700,11 @@
             trackList.innerHTML = ''; 
 
             if (tracks.length === 0) {
-                trackList.innerHTML = '<p style="text-align:center; color:#86868b; padding:40px 0;">該当する楽曲が見つかりませんでした。</p>';
+                if (currentTag === 'keep') {
+                    trackList.innerHTML = '<p style="text-align:center; color:#86868b; padding:40px 0;">キープされた楽曲はありません。<br>気になる曲の「キープ」ボタンを押すとここに一覧表示されます。</p>';
+                } else {
+                    trackList.innerHTML = '<p style="text-align:center; color:#86868b; padding:40px 0;">該当する楽曲が見つかりませんでした。</p>';
+                }
                 return;
             }
 
@@ -650,7 +717,6 @@
            ダウンロード ＆ モーダル制御
         -------------------------------------------------- */
         function handleDownload(fileUrl) {
-            // 実際にダウンロードを開始させる隠しリンクを生成して発火
             const a = document.createElement('a');
             a.href = fileUrl;
             a.download = '';
@@ -658,12 +724,10 @@
             a.click();
             document.body.removeChild(a);
 
-            // 24時間表示なし判定のチェック
             const hideUntil = localStorage.getItem('hideDownloadModalUntil');
             const now = new Date().getTime();
 
             if (!hideUntil || now > parseInt(hideUntil, 10)) {
-                // 期限切れまたは未設定ならポップアップ表示
                 document.getElementById('dont-show-checkbox').checked = false;
                 openModal('modal-download');
             }
@@ -675,7 +739,6 @@
 
         function handleDontShowChange(checkbox) {
             if (checkbox.checked) {
-                // 24時間（ミリ秒）
                 const expireTime = new Date().getTime() + (24 * 60 * 60 * 1000);
                 localStorage.setItem('hideDownloadModalUntil', expireTime);
             } else {
@@ -687,7 +750,7 @@
             const creditText = document.getElementById('credit-text').innerText;
             navigator.clipboard.writeText(creditText).then(() => {
                 const copyBtn = document.getElementById('copy-btn');
-                copyBtn.innerText = 'コピー完了！';
+                copyBtn.innerText = 'コピー完了';
                 copyBtn.style.backgroundColor = '#fb0100';
                 copyBtn.style.color = '#ffffff';
                 copyBtn.style.borderColor = '#fb0100';
@@ -701,7 +764,6 @@
             });
         }
 
-        // スマホメニュー開閉
         function toggleMenu() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('active');
