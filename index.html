@@ -19,7 +19,7 @@
 
         /* ヘッダーナビゲーション */
         .nav-bar {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             position: sticky;
@@ -34,6 +34,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
         .nav-logo {
             font-weight: 700;
@@ -44,12 +45,14 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
         .nav-logo img {
             height: 22px;
             width: auto;
         }
         .nav-logo span { color: #fb0100; }
+        
         .nav-links {
             display: flex;
             gap: 20px;
@@ -61,8 +64,20 @@
             font-weight: 500;
             transition: color 0.2s;
             cursor: pointer;
+            white-space: nowrap;
         }
         .nav-link:hover { color: #fb0100; }
+
+        /* スマホ用ハンバーガーボタン（PCでは非表示） */
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #1d1d1f;
+            cursor: pointer;
+            padding: 4px;
+        }
 
         .container {
             max-width: 900px;
@@ -305,11 +320,31 @@
         .modal-body { font-size: 14px; line-height: 1.6; color: #333; }
         .modal-body h3 { font-size: 15px; margin-top: 20px; }
 
+        /* レスポンシブ設計（スマホ対応） */
         @media (max-width: 768px) {
             .track-card { flex-direction: column; align-items: flex-start; }
             .thumbnail, .controls { width: 100%; }
-            .nav-links { gap: 12px; }
-            .nav-link { font-size: 12px; }
+
+            /* ハンバーガーメニュー有効化 */
+            .hamburger-btn { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: -20px;
+                right: -20px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 16px 24px;
+                gap: 16px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            }
+            .nav-links.active {
+                display: flex;
+            }
         }
     </style>
 </head>
@@ -322,7 +357,10 @@
                 <img src="./logo.png" alt="Logo">
                 T-Sounds <span>BGM</span>
             </a>
-            <nav class="nav-links">
+            
+            <button class="hamburger-btn" onclick="toggleMenu()" aria-label="メニューを開く">☰</button>
+
+            <nav class="nav-links" id="nav-links">
                 <span class="nav-link" onclick="openModal('modal-terms')">利用規約</span>
                 <span class="nav-link" onclick="openModal('modal-privacy')">プライバシーポリシー</span>
                 <span class="nav-link" onclick="openModal('modal-contact')">お問い合わせ</span>
@@ -331,7 +369,7 @@
     </header>
 
     <div class="container">
-        <!-- メインヘッダー（ロゴ入り） -->
+        <!-- メインヘッダー -->
         <div class="header">
             <img src="./logo.png" alt="T-Sounds Logo" class="header-logo">
             <h1>T-Sounds</h1>
@@ -525,8 +563,20 @@
             });
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        // スマホメニュー開閉
+        function toggleMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // モーダル開閉（開いたときはスマホメニューを閉じる）
+        function openModal(id) {
+            document.getElementById('nav-links').classList.remove('active');
+            document.getElementById(id).style.display = 'flex';
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
 
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
