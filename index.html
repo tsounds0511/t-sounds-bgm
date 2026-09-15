@@ -63,20 +63,19 @@
             font-size: 13px;
             font-weight: 500;
             transition: color 0.2s;
-            cursor: pointer;
             white-space: nowrap;
         }
         .nav-link:hover { color: #fb0100; }
 
-        /* スマホ用ハンバーガーボタン */
+        /* スマホ用ハンバーガーボタン（SVGアイコン） */
         .hamburger-btn {
             display: none;
             background: none;
             border: none;
-            font-size: 18px;
-            color: #1d1d1f;
             cursor: pointer;
             padding: 4px;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
@@ -124,7 +123,6 @@
             margin-bottom: 16px;
         }
         
-        /* ランダムピックアップバッジ */
         .featured-badge {
             position: relative;
             overflow: hidden;
@@ -286,7 +284,6 @@
         .yt-link { background-color: #f5f5f7; flex: 1.2; }
         .yt-link:hover { background-color: #e8e8ed; }
         
-        /* キープボタン（比較用） */
         .keep-btn { 
             background-color: #f5f5f7; 
             border: 1px solid #e8e8ed; 
@@ -302,7 +299,7 @@
         .download-btn { background-color: #fb0100; color: white; flex: 1; }
         .download-btn:hover { background-color: #d90100; }
 
-        /* モーダル */
+        /* ダウンロード感謝モーダル */
         .modal {
             display: none;
             position: fixed;
@@ -335,9 +332,7 @@
         }
         .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
         .modal-body { font-size: 14px; line-height: 1.6; color: #333; }
-        .modal-body h3 { font-size: 15px; margin-top: 20px; border-bottom: 1px solid #e8e8ed; padding-bottom: 6px; }
 
-        /* ダウンロードモーダル用デザイン */
         .credit-box {
             background: #f5f5f7;
             border: 1px solid #e8e8ed;
@@ -348,11 +343,7 @@
             justify-content: space-between;
             margin: 16px 0;
         }
-        .credit-text {
-            font-family: monospace;
-            font-size: 13px;
-            color: #1d1d1f;
-        }
+        .credit-text { font-family: monospace; font-size: 13px; color: #1d1d1f; }
         .copy-btn {
             background: #ffffff;
             border: 1px solid #d2d2d7;
@@ -393,14 +384,24 @@
             font-size: 12px;
             color: #6e6e73;
         }
-        .dont-show-container input { cursor: pointer; }
 
-        /* レスポンシブ設計 */
+        /* フッター */
+        footer {
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+            font-size: 12px;
+            color: #86868b;
+            border-top: 1px solid #e8e8ed;
+            margin-top: 60px;
+        }
+        footer a { color: #6e6e73; text-decoration: none; margin: 0 8px; }
+        footer a:hover { color: #fb0100; }
+
         @media (max-width: 768px) {
             .track-card { flex-direction: column; align-items: flex-start; }
             .thumbnail, .controls { width: 100%; }
 
-            .hamburger-btn { display: block; }
+            .hamburger-btn { display: flex; }
             .nav-links {
                 display: none;
                 position: absolute;
@@ -425,30 +426,34 @@
     <!-- ヘッダーナビゲーション -->
     <header class="nav-bar">
         <div class="nav-container">
-            <a href="#" class="nav-logo">
+            <a href="./index.html" class="nav-logo">
                 <img src="./logo.png" alt="Logo">
                 T-Sounds <span>BGM</span>
             </a>
             
-            <button class="hamburger-btn" onclick="toggleMenu()" aria-label="メニューを開く">Menu</button>
+            <button class="hamburger-btn" onclick="toggleMenu()" aria-label="メニューを開く">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
 
             <nav class="nav-links" id="nav-links">
-                <span class="nav-link" onclick="openModal('modal-terms')">利用規約</span>
-                <span class="nav-link" onclick="openModal('modal-privacy')">プライバシーポリシー</span>
-                <span class="nav-link" onclick="openModal('modal-contact')">お問い合わせ</span>
+                <a href="./terms.html" class="nav-link">利用規約</a>
+                <a href="./privacy.html" class="nav-link">プライバシーポリシー</a>
+                <a href="./contact.html" class="nav-link">お問い合わせ</a>
             </nav>
         </div>
     </header>
 
     <div class="container">
-        <!-- メインヘッダー -->
         <div class="header">
             <img src="./logo.png" alt="T-Sounds Logo" class="header-logo">
             <h1>T-Sounds</h1>
             <p>Premium Free BGM Library</p>
         </div>
 
-        <!-- 本日のランダムピックアップ -->
         <div id="featured-container" class="featured-section" style="display: none;">
             <div class="featured-header">
                 <span class="featured-badge">Today's Pick Up</span>
@@ -457,12 +462,10 @@
             <div id="featured-card-slot"></div>
         </div>
 
-        <!-- リアルタイム検索窓 -->
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="キーワード・タイトル・タグで検索..." oninput="onSearchInput()">
         </div>
 
-        <!-- タグフィルター ＋ キープ（比較）フィルター -->
         <div class="filters" id="filter-container">
             <button class="filter-btn active" onclick="filterTracks('all', this)">すべて</button>
             <button class="filter-btn keep-filter" id="filter-keep-btn" onclick="filterTracks('keep', this)">キープ (0)</button>
@@ -479,7 +482,7 @@
         <div id="track-list"></div>
     </div>
 
-    <!-- モーダル：ダウンロード感謝 ＆ チャンネル登録誘導 -->
+    <!-- モーダル：ダウンロード感謝 -->
     <div id="modal-download" class="modal">
         <div class="modal-content" style="text-align: center;">
             <button class="modal-close" onclick="closeDownloadModal()">×</button>
@@ -506,59 +509,17 @@
         </div>
     </div>
 
-    <!-- モーダル：利用規約 -->
-    <div id="modal-terms" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal-terms')">×</button>
-            <div class="modal-title">利用規約（ガイドライン）</div>
-            <div class="modal-body">
-                <p>T-Soundsで配信している音源は、個人・商用を問わず無料でご利用いただけます。</p>
-                <h3>許可されている範囲</h3>
-                <ul>
-                    <li>YouTube、TikTok、配信、Vlog、ゲーム実況などの背景音楽としての使用</li>
-                    <li>動画コンテンツの商用化・収益化</li>
-                    <li>動画の尺に合わせたカットやフェード処理などの簡易な編集</li>
-                </ul>
-                <h3>禁止事項</h3>
-                <ul>
-                    <li>音源自体の二次配布、転売、JASRAC等への著作権登録</li>
-                    <li>作業用BGMまとめなど、音楽メインのコンテンツとしての再アップロード</li>
-                    <li>公序良俗に反するコンテンツや違法行為への使用</li>
-                </ul>
-                <h3>クレジット表記について</h3>
-                <p>クレジット表記は任意ですが、概要欄などに「BGM: T-Sounds」と記載していただけると幸いです。</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- モーダル：プライバシーポリシー -->
-    <div id="modal-privacy" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal-privacy')">×</button>
-            <div class="modal-title">プライバシーポリシー</div>
-            <div class="modal-body">
-                <p>当サイトでは、サービスの改善およびアクセスの解析のためにアクセスログ等を取得する場合がありますが、個人を特定する情報の収集・保持は行っておりません。</p>
-                <p>取得した情報はサイトの利便利向上および統計的な分析にのみ使用し、第三者への提供は行いません。</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- モーダル：お問い合わせ -->
-    <div id="modal-contact" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal-contact')">×</button>
-            <div class="modal-title">お問い合わせ</div>
-            <div class="modal-body">
-                <p>楽曲に関するご質問、使用のご報告、楽曲制作のご依頼などは、YouTubeチャンネルの概要欄、または公式SNS/連絡先よりご連絡ください。</p>
-                <p style="margin-top:20px; text-align:center;">
-                    <a href="https://www.youtube.com/@t-sounds0511" target="_blank" class="download-btn" style="display:inline-block; width:auto; padding:10px 24px;">YouTubeチャンネルへ</a>
-                </p>
-            </div>
-        </div>
-    </div>
+    <footer>
+        <p>© T-Sounds All Rights Reserved.</p>
+        <p>
+            <a href="./terms.html">利用規約</a> | 
+            <a href="./privacy.html">プライバシーポリシー</a> | 
+            <a href="./contact.html">お問い合わせ</a>
+        </p>
+    </footer>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         
         let allTracks = []; 
         let currentTag = 'all';
@@ -589,9 +550,6 @@
             }
         }
 
-        /* --------------------------------------------------
-           キープ（比較リスト）機能
-        -------------------------------------------------- */
         function toggleKeep(youtubeId) {
             const index = keptTrackIds.indexOf(youtubeId);
             if (index === -1) {
@@ -603,7 +561,6 @@
             updateKeepBadgeCount();
             applyFilters();
 
-            // ランダムピックアップのカードも最新のキープ状態を反映
             const featuredSlot = document.getElementById('featured-card-slot');
             if (featuredSlot.children.length > 0) {
                 const currentFeaturedId = featuredSlot.querySelector('.download-btn')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
@@ -713,9 +670,6 @@
             });
         }
 
-        /* --------------------------------------------------
-           ダウンロード ＆ モーダル制御
-        -------------------------------------------------- */
         function handleDownload(fileUrl) {
             const a = document.createElement('a');
             a.href = fileUrl;
@@ -729,12 +683,12 @@
 
             if (!hideUntil || now > parseInt(hideUntil, 10)) {
                 document.getElementById('dont-show-checkbox').checked = false;
-                openModal('modal-download');
+                document.getElementById('modal-download').style.display = 'flex';
             }
         }
 
         function closeDownloadModal() {
-            closeModal('modal-download');
+            document.getElementById('modal-download').style.display = 'none';
         }
 
         function handleDontShowChange(checkbox) {
@@ -768,21 +722,6 @@
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('active');
         }
-
-        function openModal(id) {
-            document.getElementById('nav-links').classList.remove('active');
-            document.getElementById(id).style.display = 'flex';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        };
 
         document.addEventListener('play', function(e){
             const audios = document.getElementsByTagName('audio');
