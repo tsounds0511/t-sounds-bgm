@@ -59,13 +59,21 @@
         .header h1 { color: #1d1d1f; margin: 0 0 4px 0; font-size: 28px; letter-spacing: -0.5px; }
         .header p { margin: 0; color: #6e6e73; font-size: 13px; }
 
-        /* 個別アクセス時の案内バナー */
+        /* 個別アクセス時の案内バナー（赤枠に更新） */
         .single-notice {
-            background: #ffffff; border: 1px solid #d2d2d7; border-radius: 12px;
-            padding: 12px 20px; margin-bottom: 20px; display: flex;
-            justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+            background: #ffffff;
+            border: 1px solid #fb0100;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 15px rgba(251, 1, 0, 0.06);
         }
-        .single-notice p { margin: 0; font-size: 13px; color: #1d1d1f; }
+        .single-notice p { margin: 0; font-size: 13px; color: #1d1d1f; font-weight: 500; }
 
         /* Today's Pick Up */
         .featured-section {
@@ -152,7 +160,7 @@
             overflow: hidden; text-overflow: ellipsis; margin: 0;
         }
 
-        /* 再生バーの横幅を大幅に拡大 (170px ➔ 250px) */
+        /* 再生バー */
         .track-player { width: 250px; flex-shrink: 0; }
         audio { width: 100%; height: 36px; outline: none; }
 
@@ -239,9 +247,9 @@
             <p>Premium Free BGM Library</p>
         </div>
 
-        <!-- 個別URLアクセス時の通知バナー -->
+        <!-- 個別アクセス時の案内バナー（絵文字なし・赤枠） -->
         <div id="single-notice" class="single-notice" style="display: none;">
-            <p>🎵 指定された楽曲を表示しています</p>
+            <p>指定された楽曲を表示しています</p>
             <button class="btn-sm btn-yt" onclick="clearSingleFilter()">すべての曲を見る</button>
         </div>
 
@@ -254,7 +262,7 @@
             <div id="featured-card-slot"></div>
         </div>
 
-        <!-- ツールバー（絵文字なし） -->
+        <!-- ツールバー（絵文字なし・4ジャンル） -->
         <div class="toolbar">
             <input type="text" id="search-input" class="search-input" placeholder="曲名・キーワードで検索..." oninput="onSearchInput()">
             <div class="filters">
@@ -263,7 +271,7 @@
                 <button class="filter-btn" onclick="filterTracks('集中', this)">集中</button>
                 <button class="filter-btn" onclick="filterTracks('Vlog', this)">Vlog</button>
                 <button class="filter-btn" onclick="filterTracks('ゲーム', this)">ゲーム</button>
-                <button class="filter-btn" onclick="filterTracks('チル', this)">チル</button>
+                <button class="filter-btn" onclick="filterTracks('リラックス', this)">リラックス</button>
             </div>
             <label class="autoplay-toggle">
                 <input type="checkbox" id="autoplay-checkbox"> 連続再生
@@ -284,7 +292,7 @@
             <p style="font-size: 12px; color: #6e6e73; margin-bottom: 16px;">クレジット表記にご協力いただけると幸いです（任意）。</p>
             <div style="background: #f5f5f7; padding: 8px 12px; border-radius: 8px; font-family: monospace; font-size: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <span id="credit-text">BGM: T-Sounds</span>
-                <button onclick="copyCredit()" id="copy-btn" style="border: 1px solid #d2d2d7; background: white; border-radius: 50px; padding: 4px 10px; font-size: 11px; cursor: pointer;">コピー</button>
+                <button onclick="copyCredit()" id="copy-btn" style="border: 1px solid #d2d2d7; background: white; border-radius: 50px; font-size: 11px; cursor: pointer;">コピー</button>
             </div>
             <a href="https://www.youtube.com/@t-sounds0511?sub_confirmation=1" target="_blank" class="btn-sm btn-dl" style="display: block; padding: 10px; text-decoration: none;">YouTubeチャンネル登録</a>
         </div>
@@ -296,7 +304,7 @@
     </footer>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         let allTracks = []; 
         let currentCategory = 'all';
         let keptTrackIds = JSON.parse(localStorage.getItem('keptTrackIds') || '[]');
@@ -384,7 +392,6 @@
             if (el) el.classList.toggle('open');
         }
 
-        /* 共有機能（スマホの共有シート ＆ フォールバック） */
         function shareTrack(title, vid, btn) {
             const shareUrl = `https://t-sounds.com/?v=${vid}`;
             if (navigator.share) {
@@ -474,7 +481,7 @@
                             <div class="details-content">
                                 <div><strong>【楽曲説明】</strong> ${track.description || '商用利用・個人利用可能なフリーBGMです。'}</div>
                                 <div class="details-share">
-                                    <span>🔗 直接リンク:</span>
+                                    <span>直接リンク:</span>
                                     <span class="share-url">https://t-sounds.com/?v=${track.youtube_id}</span>
                                     <button class="btn-sm btn-yt" onclick="copyShareUrl('${track.youtube_id}', this)">URLコピー</button>
                                     <button class="btn-sm btn-yt" style="background:#fb0100; color:white;" onclick="shareTrack('${track.title}', '${track.youtube_id}', this)">共有</button>
