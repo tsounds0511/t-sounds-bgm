@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-        <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BPGEB13LX4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-BPGEB13LX4');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-Sounds | Premium Free BGM Library</title>    
-    <!-- タブアイコン（ファビコン）設定 -->
+    <title>T-Sounds | Premium Free BGM Library</title>
     <link rel="icon" href="./logo.png" type="image/png">
+
+    <!-- GA4 タグ -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BPGEB13LX4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BPGEB13LX4');
+    </script>
 
     <style>
         body {
@@ -22,7 +21,7 @@
             background-color: #fbfbfd;
             color: #1d1d1f;
             margin: 0;
-            padding: 0 0 40px 0;
+            padding: 0 0 60px 0;
         }
 
         /* ヘッダーナビゲーション */
@@ -30,400 +29,204 @@
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
             padding: 10px 20px;
         }
         .nav-container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
         }
         .nav-logo {
-            font-weight: 700;
-            font-size: 16px;
-            color: #1d1d1f;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
+            font-weight: 700; font-size: 16px; color: #1d1d1f;
+            text-decoration: none; display: flex; align-items: center; gap: 8px;
         }
-        .nav-logo img {
-            height: 22px;
-            width: auto;
-        }
+        .nav-logo img { height: 22px; }
         .nav-logo span { color: #fb0100; }
-        
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-        .nav-link {
-            color: #6e6e73;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: color 0.2s;
-            white-space: nowrap;
-        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-link { color: #6e6e73; text-decoration: none; font-size: 13px; font-weight: 500; }
         .nav-link:hover { color: #fb0100; }
 
-        /* スマホ用ハンバーガーボタン（SVGアイコン） */
         .hamburger-btn {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            align-items: center;
-            justify-content: center;
+            display: none; background: none; border: none; cursor: pointer; padding: 4px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: 40px 20px 0 20px;
+            padding: 30px 20px 0 20px;
         }
         
-        /* メインヘッダー */
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header-logo {
-            width: 56px;
-            height: 56px;
-            object-fit: contain;
-            margin-bottom: 12px;
-        }
-        .header h1 {
-            color: #1d1d1f;
-            margin: 0 0 5px 0;
-            font-size: 32px;
-            letter-spacing: -0.5px;
-        }
-        .header p {
-            margin: 0;
-            color: #6e6e73;
-            font-size: 14px;
-        }
+        .header { text-align: center; margin-bottom: 24px; }
+        .header-logo { width: 48px; height: 48px; object-fit: contain; margin-bottom: 8px; }
+        .header h1 { color: #1d1d1f; margin: 0 0 4px 0; font-size: 28px; letter-spacing: -0.5px; }
+        .header p { margin: 0; color: #6e6e73; font-size: 13px; }
 
-        /* ランダムピックアップエリア */
-        .featured-section {
-            background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
-            border: 1px solid rgba(251, 1, 0, 0.15);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 36px;
-            box-shadow: 0 8px 30px rgba(251, 1, 0, 0.06);
-        }
-        .featured-header {
+        /* 検索＆カテゴリフィルター */
+        .toolbar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .featured-badge {
-            position: relative;
-            overflow: hidden;
-            background: #fb0100;
-            color: white;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 50px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(251, 1, 0, 0.3);
-        }
-        .featured-badge::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-            transform: skewX(-25deg);
-            animation: badgeShine 3.5s infinite;
-        }
-        @keyframes badgeShine {
-            0% { left: -100%; }
-            20% { left: 200%; }
-            100% { left: 200%; }
-        }
-
-        .shuffle-btn {
-            background: #ffffff;
-            border: 1px solid #e8e8ed;
-            color: #1d1d1f;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 6px 14px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .shuffle-btn:hover {
-            border-color: #fb0100;
-            color: #fb0100;
-        }
-
-        /* 検索バー＆フィルター */
-        .search-container {
+            gap: 12px;
             margin-bottom: 20px;
-            text-align: center;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 1px solid #e8e8ed;
         }
         .search-input {
-            width: 100%;
-            max-width: 500px;
-            padding: 12px 20px;
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 16px;
             border-radius: 50px;
             border: 1px solid #d2d2d7;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
-            box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .search-input:focus {
-            border-color: #fb0100;
-            box-shadow: 0 0 0 3px rgba(251, 1, 0, 0.1);
-        }
+        .search-input:focus { border-color: #fb0100; }
 
-        .filters {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
+        .filters { display: flex; gap: 6px; flex-wrap: wrap; }
         .filter-btn {
-            background-color: #f5f5f7;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 50px;
-            font-size: 13px;
-            color: #1d1d1f;
-            cursor: pointer;
-            transition: all 0.2s;
+            background-color: #f5f5f7; border: none;
+            padding: 6px 14px; border-radius: 50px;
+            font-size: 12px; font-weight: 500; color: #1d1d1f;
+            cursor: pointer; transition: all 0.2s;
         }
         .filter-btn:hover { background-color: #e8e8ed; }
         .filter-btn.active { background-color: #fb0100; color: white; }
         .filter-btn.keep-filter.active { background-color: #1d1d1f; color: white; }
 
-        /* トラックカード */
-        .track-card {
+        /* リストテーブル形式のトラック一覧 */
+        .track-list-container {
             background: #ffffff;
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-radius: 16px;
+            border: 1px solid #e8e8ed;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .track-row {
             display: flex;
             align-items: center;
-            gap: 24px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f5f5f7;
+            gap: 16px;
+            transition: background-color 0.15s ease;
         }
-        .track-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-        }
-        .thumbnail {
-            width: 160px;
-            aspect-ratio: 16/9;
-            border-radius: 12px;
+        .track-row:last-child { border-bottom: none; }
+        .track-row:hover { background-color: #fafafa; }
+
+        /* ミニサムネイル */
+        .track-thumb {
+            width: 56px;
+            height: 36px;
+            border-radius: 6px;
             object-fit: cover;
-            background-color: #f2f2f2;
+            background: #eee;
+            flex-shrink: 0;
         }
-        .track-info { flex-grow: 1; }
+
+        /* 曲情報 */
+        .track-meta {
+            flex: 1;
+            min-width: 0;
+        }
+        .track-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
         .track-title {
-            font-size: 19px;
+            font-size: 15px;
             font-weight: 600;
-            margin: 0 0 6px 0;
+            color: #1d1d1f;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+        .category-badge {
+            font-size: 10px;
+            background: #f5f5f7;
+            color: #6e6e73;
+            padding: 2px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .track-desc {
-            font-size: 13px;
-            color: #6e6e73;
-            margin: 0 0 10px 0;
-            line-height: 1.4;
-        }
-        .tag {
-            display: inline-block;
-            background: #f5f5f7;
-            padding: 4px 10px;
-            border-radius: 50px;
-            margin-right: 4px;
-            font-size: 11px;
-            color: #555;
-            cursor: pointer;
-        }
-        .tag:hover { background-color: #e8e8ed; }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 16px;
-            min-width: 280px;
-        }
-        audio { height: 36px; width: 100%; outline: none; }
-        .action-buttons { display: flex; gap: 8px; width: 100%; }
-        
-        .yt-link, .keep-btn, .download-btn {
-            color: #1d1d1f;
-            text-decoration: none;
-            padding: 10px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-            white-space: nowrap;
-        }
-        .yt-link { background-color: #f5f5f7; flex: 1.2; }
-        .yt-link:hover { background-color: #e8e8ed; }
-        
-        .keep-btn { 
-            background-color: #f5f5f7; 
-            border: 1px solid #e8e8ed; 
-            flex: 0.9;
-        }
-        .keep-btn:hover { background-color: #e8e8ed; }
-        .keep-btn.active {
-            background-color: #1d1d1f;
-            color: white;
-            border-color: #1d1d1f;
-        }
-
-        .download-btn { background-color: #fb0100; color: white; flex: 1; }
-        .download-btn:hover { background-color: #d90100; }
-
-        /* ダウンロード感謝モーダル */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(8px);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            max-width: 520px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 32px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-        }
-        .modal-close {
-            position: absolute;
-            top: 20px; right: 20px;
-            border: none; background: #f5f5f7;
-            width: 32px; height: 32px; border-radius: 50%;
-            cursor: pointer; font-weight: bold; color: #555;
-        }
-        .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
-        .modal-body { font-size: 14px; line-height: 1.6; color: #333; }
-
-        .credit-box {
-            background: #f5f5f7;
-            border: 1px solid #e8e8ed;
-            border-radius: 12px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 16px 0;
-        }
-        .credit-text { font-family: monospace; font-size: 13px; color: #1d1d1f; }
-        .copy-btn {
-            background: #ffffff;
-            border: 1px solid #d2d2d7;
-            border-radius: 50px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .copy-btn:hover { border-color: #fb0100; color: #fb0100; }
-        .yt-sub-btn {
-            display: block;
-            width: 100%;
-            background: #fb0100;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 14px;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(251, 1, 0, 0.2);
-            transition: background-color 0.2s;
-            box-sizing: border-box;
-        }
-        .yt-sub-btn:hover { background: #d90100; }
-        .dont-show-container {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid #e8e8ed;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #6e6e73;
-        }
-
-        /* フッター */
-        footer {
-            text-align: center;
-            padding: 40px 20px 20px 20px;
             font-size: 12px;
             color: #86868b;
-            border-top: 1px solid #e8e8ed;
-            margin-top: 60px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
         }
+
+        /* プレイヤー & 操作ボタン */
+        .track-player {
+            width: 180px;
+            flex-shrink: 0;
+        }
+        audio { width: 100%; height: 32px; outline: none; }
+
+        .track-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-yt { background: #f5f5f7; color: #1d1d1f; }
+        .btn-yt:hover { background: #e8e8ed; }
+        .btn-keep { background: #f5f5f7; color: #1d1d1f; border: 1px solid #e8e8ed; }
+        .btn-keep.active { background: #1d1d1f; color: white; border-color: #1d1d1f; }
+        .btn-dl { background: #fb0100; color: white; }
+        .btn-dl:hover { background: #d90100; }
+
+        /* モーダル */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 200;
+            justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+        }
+        .modal-content {
+            background: white; border-radius: 24px; max-width: 480px; width: 100%;
+            padding: 28px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; border: none; background: #f5f5f7;
+            width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: bold;
+        }
+
+        footer { text-align: center; padding: 40px 20px 20px 20px; font-size: 12px; color: #86868b; }
         footer a { color: #6e6e73; text-decoration: none; margin: 0 8px; }
-        footer a:hover { color: #fb0100; }
 
         @media (max-width: 768px) {
-            .track-card { flex-direction: column; align-items: flex-start; }
-            .thumbnail, .controls { width: 100%; }
-
+            .track-row { flex-wrap: wrap; gap: 10px; padding: 14px 12px; }
+            .track-player { width: 100%; order: 3; }
+            .track-actions { width: 100%; justify-content: flex-end; order: 4; }
             .hamburger-btn { display: flex; }
             .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: -20px;
-                right: -20px;
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 16px 24px;
-                gap: 16px;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                display: none; position: absolute; top: 100%; left: -20px; right: -20px;
+                background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+                flex-direction: column; padding: 16px 24px; gap: 16px;
+                border-bottom: 1px solid rgba(0,0,0,0.08);
             }
             .nav-links.active { display: flex; }
         }
@@ -431,22 +234,15 @@
 </head>
 <body>
 
-    <!-- ヘッダーナビゲーション -->
     <header class="nav-bar">
         <div class="nav-container">
             <a href="./index.html" class="nav-logo">
                 <img src="./logo.png" alt="Logo">
                 T-Sounds <span>BGM</span>
             </a>
-            
-            <button class="hamburger-btn" onclick="toggleMenu()" aria-label="メニューを開く">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
+            <button class="hamburger-btn" onclick="toggleMenu()" aria-label="メニュー">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
-
             <nav class="nav-links" id="nav-links">
                 <a href="./terms.html" class="nav-link">利用規約</a>
                 <a href="./privacy.html" class="nav-link">プライバシーポリシー</a>
@@ -462,75 +258,49 @@
             <p>Premium Free BGM Library</p>
         </div>
 
-        <div id="featured-container" class="featured-section" style="display: none;">
-            <div class="featured-header">
-                <span class="featured-badge">Today's Pick Up</span>
-                <button class="shuffle-btn" onclick="renderRandomFeatured()">シャッフル</button>
+        <!-- ツールバー：検索 & カテゴリ -->
+        <div class="toolbar">
+            <input type="text" id="search-input" class="search-input" placeholder="曲名・キーワードで検索..." oninput="onSearchInput()">
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterTracks('all', this)">すべて</button>
+                <button class="filter-btn keep-filter" id="filter-keep-btn" onclick="filterTracks('keep', this)">キープ (0)</button>
+                <button class="filter-btn" onclick="filterTracks('集中', this)">集中</button>
+                <button class="filter-btn" onclick="filterTracks('Vlog', this)">Vlog</button>
+                <button class="filter-btn" onclick="filterTracks('ゲーム', this)">ゲーム</button>
+                <button class="filter-btn" onclick="filterTracks('チル', this)">チル</button>
             </div>
-            <div id="featured-card-slot"></div>
         </div>
 
-        <div class="search-container">
-            <input type="text" id="search-input" class="search-input" placeholder="キーワード・タイトル・タグで検索..." oninput="onSearchInput()">
-        </div>
-
-        <div class="filters" id="filter-container">
-            <button class="filter-btn active" onclick="filterTracks('all', this)">すべて</button>
-            <button class="filter-btn keep-filter" id="filter-keep-btn" onclick="filterTracks('keep', this)">キープ (0)</button>
-            <button class="filter-btn" onclick="filterTracks('集中', this)">集中</button>
-            <button class="filter-btn" onclick="filterTracks('Vlog', this)">Vlog</button>
-            <button class="filter-btn" onclick="filterTracks('ゲーム', this)">ゲーム</button>
-            <button class="filter-btn" onclick="filterTracks('ピアノ', this)">ピアノ</button>
-        </div>
-
-        <div id="loading" style="text-align: center; color: #86868b; padding: 40px 0;">
-            <img src="./logo.png" alt="Loading..." style="width: 40px; height: 40px; opacity: 0.6; margin-bottom: 12px; animation: badgeShine 2s infinite ease-in-out;"><br>
-            楽曲データを読み込んでいます...
-        </div>
-        <div id="track-list"></div>
+        <div id="loading" style="text-align: center; color: #86868b; padding: 40px 0;">楽曲データを読み込んでいます...</div>
+        
+        <!-- スリムなトラックリスト -->
+        <div class="track-list-container" id="track-list" style="display: none;"></div>
     </div>
 
-    <!-- モーダル：ダウンロード感謝 -->
+    <!-- ダウンロードモーダル -->
     <div id="modal-download" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <button class="modal-close" onclick="closeDownloadModal()">×</button>
-            <img src="./logo.png" alt="Logo" style="width: 48px; height: 48px; margin-bottom: 12px;">
-            <div class="modal-title">ダウンロードありがとうございます</div>
-            <div class="modal-body">
-                <p style="margin: 0 0 16px 0; color: #6e6e73;">クレジット表記をしていただくと活動の励みになります（任意）。</p>
-                
-                <div class="credit-box">
-                    <span class="credit-text" id="credit-text">BGM: T-Sounds</span>
-                    <button class="copy-btn" id="copy-btn" onclick="copyCredit()">コピー</button>
-                </div>
-
-                <a href="https://www.youtube.com/@t-sounds0511?sub_confirmation=1" target="_blank" class="yt-sub-btn">
-                    YouTubeチャンネル登録
-                </a>
-
-                <div class="dont-show-container">
-                    <label>
-                        <input type="checkbox" id="dont-show-checkbox" onchange="handleDontShowChange(this)"> 24時間はこのメッセージを表示しない
-                    </label>
-                </div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-download')">×</button>
+            <img src="./logo.png" alt="Logo" style="width: 40px; height: 40px; margin-bottom: 8px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 18px;">ダウンロードありがとうございます</h3>
+            <p style="font-size: 12px; color: #6e6e73; margin-bottom: 16px;">クレジット表記にご協力いただけると幸いです（任意）。</p>
+            <div style="background: #f5f5f7; padding: 8px 12px; border-radius: 8px; font-family: monospace; font-size: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <span id="credit-text">BGM: T-Sounds</span>
+                <button onclick="copyCredit()" id="copy-btn" style="border: 1px solid #d2d2d7; background: white; border-radius: 50px; padding: 4px 10px; font-size: 11px; cursor: pointer;">コピー</button>
             </div>
+            <a href="https://www.youtube.com/@t-sounds0511?sub_confirmation=1" target="_blank" class="btn-sm btn-dl" style="display: block; padding: 10px; text-decoration: none;">YouTubeチャンネル登録</a>
         </div>
     </div>
 
     <footer>
         <p>© T-Sounds All Rights Reserved.</p>
-        <p>
-            <a href="./terms.html">利用規約</a> | 
-            <a href="./privacy.html">プライバシーポリシー</a> | 
-            <a href="./contact.html">お問い合わせ</a>
-        </p>
+        <p><a href="./terms.html">利用規約</a> | <a href="./privacy.html">プライバシーポリシー</a> | <a href="./contact.html">お問い合わせ</a></p>
     </footer>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
-        
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         let allTracks = []; 
-        let currentTag = 'all';
+        let currentCategory = 'all';
         let keptTrackIds = JSON.parse(localStorage.getItem('keptTrackIds') || '[]');
 
         async function fetchTracks() {
@@ -538,6 +308,7 @@
                 const response = await fetch(API_URL);
                 allTracks = await response.json();
                 document.getElementById('loading').style.display = 'none';
+                document.getElementById('track-list').style.display = 'block';
 
                 updateKeepBadgeCount();
 
@@ -545,198 +316,127 @@
                 const targetVid = urlParams.get('v');
 
                 if (targetVid) {
-                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
                     const filtered = allTracks.filter(track => track.youtube_id === targetVid);
-                    renderTrackCards(filtered);
+                    renderTrackList(filtered);
                 } else {
-                    renderTrackCards(allTracks);
-                    renderRandomFeatured();
+                    renderTrackList(allTracks);
                 }
             } catch (error) {
-                console.error('通信エラー:', error);
                 document.getElementById('loading').innerText = 'データの読み込みに失敗しました。';
             }
         }
 
         function toggleKeep(youtubeId) {
             const index = keptTrackIds.indexOf(youtubeId);
-            if (index === -1) {
-                keptTrackIds.push(youtubeId);
-            } else {
-                keptTrackIds.splice(index, 1);
-            }
+            if (index === -1) { keptTrackIds.push(youtubeId); } 
+            else { keptTrackIds.splice(index, 1); }
             localStorage.setItem('keptTrackIds', JSON.stringify(keptTrackIds));
             updateKeepBadgeCount();
             applyFilters();
-
-            const featuredSlot = document.getElementById('featured-card-slot');
-            if (featuredSlot.children.length > 0) {
-                const currentFeaturedId = featuredSlot.querySelector('.download-btn')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-                const track = allTracks.find(t => t.preview_url === currentFeaturedId);
-                if (track) featuredSlot.innerHTML = createCardHTML(track);
-            }
         }
 
         function updateKeepBadgeCount() {
             const keepBtn = document.getElementById('filter-keep-btn');
-            if (keepBtn) {
-                keepBtn.innerText = `キープ (${keptTrackIds.length})`;
-            }
-        }
-
-        function renderRandomFeatured() {
-            if (allTracks.length === 0) return;
-            const randomIndex = Math.floor(Math.random() * allTracks.length);
-            const track = allTracks[randomIndex];
-            
-            const slot = document.getElementById('featured-card-slot');
-            slot.innerHTML = createCardHTML(track);
-            document.getElementById('featured-container').style.display = 'block';
+            if (keepBtn) keepBtn.innerText = `キープ (${keptTrackIds.length})`;
         }
 
         function applyFilters() {
             const keyword = document.getElementById('search-input').value.toLowerCase().trim();
             
             const filtered = allTracks.filter(track => {
-                let matchesTag = false;
-                if (currentTag === 'all') {
-                    matchesTag = true;
-                } else if (currentTag === 'keep') {
-                    matchesTag = keptTrackIds.includes(track.youtube_id);
-                } else {
-                    matchesTag = track.tags ? track.tags.includes(currentTag) : false;
-                }
+                let matchesCat = false;
+                if (currentCategory === 'all') matchesCat = true;
+                else if (currentCategory === 'keep') matchesCat = keptTrackIds.includes(track.youtube_id);
+                else matchesCat = track.tags ? track.tags.includes(currentCategory) : false;
 
                 const titleMatch = track.title ? track.title.toLowerCase().includes(keyword) : false;
-                const tagMatch = track.tags ? track.tags.toLowerCase().includes(keyword) : false;
                 const descMatch = track.description ? track.description.toLowerCase().includes(keyword) : false;
-                const matchesKeyword = !keyword || titleMatch || tagMatch || descMatch;
+                const matchesKeyword = !keyword || titleMatch || descMatch;
 
-                return matchesTag && matchesKeyword;
+                return matchesCat && matchesKeyword;
             });
 
-            renderTrackCards(filtered);
+            renderTrackList(filtered);
         }
 
-        function filterTracks(tag, element) {
-            currentTag = tag;
+        function filterTracks(cat, element) {
+            currentCategory = cat;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             if (element) element.classList.add('active');
             applyFilters();
         }
 
-        function onSearchInput() {
-            applyFilters();
-        }
+        function onSearchInput() { applyFilters(); }
 
-        function createCardHTML(track) {
-            const tagsArray = track.tags ? track.tags.split(',') : [];
-            const tagsHtml = tagsArray.map(tag => `<span class="tag" onclick="filterTracks('${tag.trim()}', null)">${tag.trim()}</span>`).join('');
-            const descHtml = track.description ? `<p class="track-desc">${track.description}</p>` : '';
-            
-            const isKept = keptTrackIds.includes(track.youtube_id);
-            const keepText = isKept ? 'キープ中' : 'キープ';
-            const keepClass = isKept ? 'keep-btn active' : 'keep-btn';
-
-            return `
-                <div class="track-card">
-                    <img src="https://img.youtube.com/vi/${track.youtube_id}/maxresdefault.jpg" class="thumbnail" alt="サムネイル" loading="lazy">
-                    <div class="track-info">
-                        <h2 class="track-title">${track.title}</h2>
-                        ${descHtml}
-                        <div>${tagsHtml}</div>
-                    </div>
-                    <div class="controls">
-                        <audio controls controlsList="nodownload" preload="none">
-                            <source src="${track.preview_url}" type="audio/mpeg">
-                        </audio>
-                        <div class="action-buttons">
-                            <a href="https://www.youtube.com/watch?v=${track.youtube_id}" target="_blank" class="yt-link">YouTubeで再生</a>
-                            <button onclick="toggleKeep('${track.youtube_id}')" class="${keepClass}">${keepText}</button>
-                            <button onclick="handleDownload('${track.preview_url}')" class="download-btn">Download</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderTrackCards(tracks) {
-            const trackList = document.getElementById('track-list');
-            trackList.innerHTML = ''; 
+        function renderTrackList(tracks) {
+            const container = document.getElementById('track-list');
+            container.innerHTML = '';
 
             if (tracks.length === 0) {
-                if (currentTag === 'keep') {
-                    trackList.innerHTML = '<p style="text-align:center; color:#86868b; padding:40px 0;">キープされた楽曲はありません。<br>気になる曲の「キープ」ボタンを押すとここに一覧表示されます。</p>';
-                } else {
-                    trackList.innerHTML = '<p style="text-align:center; color:#86868b; padding:40px 0;">該当する楽曲が見つかりませんでした。</p>';
-                }
+                container.innerHTML = '<div style="padding: 40px; text-align: center; color: #86868b; font-size: 13px;">該当する楽曲が見つかりませんでした。</div>';
                 return;
             }
 
             tracks.forEach(track => {
-                trackList.insertAdjacentHTML('beforeend', createCardHTML(track));
+                const isKept = keptTrackIds.includes(track.youtube_id);
+                const keepClass = isKept ? 'btn-sm btn-keep active' : 'btn-sm btn-keep';
+                const keepText = isKept ? 'キープ中' : 'キープ';
+                const category = track.tags ? track.tags.split(',')[0].trim() : 'BGM';
+
+                const html = `
+                    <div class="track-row">
+                        <img src="https://img.youtube.com/vi/${track.youtube_id}/mqdefault.jpg" class="track-thumb" alt="サムネ" loading="lazy">
+                        <div class="track-meta">
+                            <div class="track-title-wrap">
+                                <h3 class="track-title">${track.title}</h3>
+                                <span class="category-badge">${category}</span>
+                            </div>
+                            <p class="track-desc">${track.description || 'フリーBGM素材'}</p>
+                        </div>
+                        <div class="track-player">
+                            <audio controls controlsList="nodownload" preload="none">
+                                <source src="${track.preview_url}" type="audio/mpeg">
+                            </audio>
+                        </div>
+                        <div class="action-buttons track-actions">
+                            <a href="https://www.youtube.com/watch?v=${track.youtube_id}" target="_blank" class="btn-sm btn-yt">YouTube</a>
+                            <button onclick="toggleKeep('${track.youtube_id}')" class="${keepClass}">${keepText}</button>
+                            <button onclick="handleDownload('${track.preview_url}')" class="btn-sm btn-dl">Download</button>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
             });
         }
 
         function handleDownload(fileUrl) {
             const a = document.createElement('a');
-            a.href = fileUrl;
-            a.download = '';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            a.href = fileUrl; a.download = '';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
 
             const hideUntil = localStorage.getItem('hideDownloadModalUntil');
             const now = new Date().getTime();
-
             if (!hideUntil || now > parseInt(hideUntil, 10)) {
-                document.getElementById('dont-show-checkbox').checked = false;
-                document.getElementById('modal-download').style.display = 'flex';
-            }
-        }
-
-        function closeDownloadModal() {
-            document.getElementById('modal-download').style.display = 'none';
-        }
-
-        function handleDontShowChange(checkbox) {
-            if (checkbox.checked) {
-                const expireTime = new Date().getTime() + (24 * 60 * 60 * 1000);
-                localStorage.setItem('hideDownloadModalUntil', expireTime);
-            } else {
-                localStorage.removeItem('hideDownloadModalUntil');
+                openModal('modal-download');
             }
         }
 
         function copyCredit() {
-            const creditText = document.getElementById('credit-text').innerText;
-            navigator.clipboard.writeText(creditText).then(() => {
-                const copyBtn = document.getElementById('copy-btn');
-                copyBtn.innerText = 'コピー完了';
-                copyBtn.style.backgroundColor = '#fb0100';
-                copyBtn.style.color = '#ffffff';
-                copyBtn.style.borderColor = '#fb0100';
-
-                setTimeout(() => {
-                    copyBtn.innerText = 'コピー';
-                    copyBtn.style.backgroundColor = '#ffffff';
-                    copyBtn.style.color = '#1d1d1f';
-                    copyBtn.style.borderColor = '#d2d2d7';
-                }, 2000);
+            navigator.clipboard.writeText('BGM: T-Sounds').then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.innerText = 'コピー完了';
+                setTimeout(() => btn.innerText = 'コピー', 2000);
             });
         }
 
-        function toggleMenu() {
-            const navLinks = document.getElementById('nav-links');
-            navLinks.classList.toggle('active');
-        }
+        function toggleMenu() { document.getElementById('nav-links').classList.toggle('active'); }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         document.addEventListener('play', function(e){
             const audios = document.getElementsByTagName('audio');
-            for(let i = 0, len = audios.length; i < len;i++){
-                if(audios[i] != e.target){
-                    audios[i].pause();
-                }
+            for(let i = 0; i < audios.length; i++){
+                if(audios[i] != e.target) audios[i].pause();
             }
         }, true);
 
