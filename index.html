@@ -59,7 +59,7 @@
         .header h1 { color: #1d1d1f; margin: 0 0 4px 0; font-size: 28px; letter-spacing: -0.5px; }
         .header p { margin: 0; color: #6e6e73; font-size: 13px; }
 
-        /* 個別アクセス時の案内バナー（赤枠に更新） */
+        /* 個別アクセス時の案内バナー */
         .single-notice {
             background: #ffffff;
             border: 1px solid #fb0100;
@@ -141,10 +141,36 @@
         }
         .track-row:hover { background-color: #fafafa; }
 
-        .track-thumb {
-            width: 52px; height: 34px; border-radius: 6px; object-fit: cover;
-            background: #eee; flex-shrink: 0;
+        /* サムネイル ＋ ▶ 再生オーバーレイ */
+        .thumb-wrap {
+            position: relative;
+            width: 52px;
+            height: 34px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: pointer;
         }
+        .thumb-wrap img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .thumb-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .thumb-wrap:hover .thumb-overlay {
+            background: rgba(251, 1, 0, 0.75);
+        }
+        .play-icon {
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 5px 0 5px 8px;
+            border-color: transparent transparent transparent #ffffff;
+            margin-left: 2px;
+        }
+
         .track-meta { flex: 1; min-width: 0; }
         .track-title-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
         .track-title {
@@ -247,7 +273,7 @@
             <p>Premium Free BGM Library</p>
         </div>
 
-        <!-- 個別アクセス時の案内バナー（絵文字なし・赤枠） -->
+        <!-- 個別アクセス時の案内バナー -->
         <div id="single-notice" class="single-notice" style="display: none;">
             <p>指定された楽曲を表示しています</p>
             <button class="btn-sm btn-yt" onclick="clearSingleFilter()">すべての曲を見る</button>
@@ -262,7 +288,7 @@
             <div id="featured-card-slot"></div>
         </div>
 
-        <!-- ツールバー（絵文字なし・4ジャンル） -->
+        <!-- ツールバー -->
         <div class="toolbar">
             <input type="text" id="search-input" class="search-input" placeholder="曲名・キーワードで検索..." oninput="onSearchInput()">
             <div class="filters">
@@ -304,7 +330,7 @@
     </footer>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         let allTracks = []; 
         let currentCategory = 'all';
         let keptTrackIds = JSON.parse(localStorage.getItem('keptTrackIds') || '[]');
@@ -353,13 +379,16 @@
             const slot = document.getElementById('featured-card-slot');
             slot.innerHTML = `
                 <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-                    <img src="https://img.youtube.com/vi/${track.youtube_id}/maxresdefault.jpg" style="width:110px; aspect-ratio:16/9; border-radius:10px; object-fit:cover;">
+                    <div class="thumb-wrap" style="width:110px; height:62px; border-radius:10px;" onclick="playAudio('feat-audio')">
+                        <img src="https://img.youtube.com/vi/${track.youtube_id}/maxresdefault.jpg">
+                        <div class="thumb-overlay"><div class="play-icon" style="border-width:7px 0 7px 11px;"></div></div>
+                    </div>
                     <div style="flex:1; min-width:180px;">
                         <h3 style="margin:0 0 4px 0; font-size:15px;">${track.title}</h3>
                         <p style="margin:0; font-size:12px; color:#6e6e73; line-height:1.4;">${track.description || '本日のおすすめフリーBGM素材です。'}</p>
                     </div>
                     <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                        <audio controls controlsList="nodownload" preload="none" style="width:200px; height:36px;">
+                        <audio id="feat-audio" controls controlsList="nodownload" preload="none" style="width:200px; height:36px;">
                             <source src="${track.preview_url}" type="audio/mpeg">
                         </audio>
                         <button onclick="toggleKeep('${track.youtube_id}')" class="${keepClass}">${keepText}</button>
@@ -385,11 +414,23 @@
         }
 
         function toggleAccordion(id, event) {
-            if (event.target.closest('audio') || event.target.closest('button') || event.target.closest('a') || event.target.closest('input')) {
+            if (event.target.closest('audio') || event.target.closest('button') || event.target.closest('a') || event.target.closest('input') || event.target.closest('.thumb-wrap')) {
                 return;
             }
             const el = document.getElementById(`details-${id}`);
             if (el) el.classList.toggle('open');
+        }
+
+        /* サムネイルクリックで即再生する関数 */
+        function playAudio(audioId) {
+            const audio = document.getElementById(audioId);
+            if (audio) {
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            }
         }
 
         function shareTrack(title, vid, btn) {
@@ -454,11 +495,15 @@
                 const keepClass = isKept ? 'btn-sm btn-keep active' : 'btn-sm btn-keep';
                 const keepText = isKept ? 'キープ中' : 'キープ';
                 const category = track.tags ? track.tags.split(',')[0].trim() : 'BGM';
+                const audioId = `audio-${idx}`;
 
                 const html = `
                     <div class="track-row-wrapper">
                         <div class="track-row" onclick="toggleAccordion('${track.youtube_id}', event)">
-                            <img src="https://img.youtube.com/vi/${track.youtube_id}/mqdefault.jpg" class="track-thumb" alt="サムネ" loading="lazy">
+                            <div class="thumb-wrap" onclick="playAudio('${audioId}')" title="クリックで再生/一時停止">
+                                <img src="https://img.youtube.com/vi/${track.youtube_id}/mqdefault.jpg" alt="サムネ" loading="lazy">
+                                <div class="thumb-overlay"><div class="play-icon"></div></div>
+                            </div>
                             <div class="track-meta">
                                 <div class="track-title-wrap">
                                     <h3 class="track-title">${track.title}</h3>
@@ -467,7 +512,7 @@
                                 <p class="track-desc">${track.description || '詳細を見る（タップ）'}</p>
                             </div>
                             <div class="track-player">
-                                <audio controls controlsList="nodownload" preload="none" data-index="${idx}">
+                                <audio id="${audioId}" controls controlsList="nodownload" preload="none" data-index="${idx}">
                                     <source src="${track.preview_url}" type="audio/mpeg">
                                 </audio>
                             </div>
@@ -518,10 +563,19 @@
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
+        /* 押した瞬間割り込み爆速ロード＆即時再生制御 */
         document.addEventListener('play', function(e){
-            const audios = document.getElementsByTagName('audio');
-            for(let i = 0; i < audios.length; i++){
-                if(audios[i] != e.target) audios[i].pause();
+            const target = e.target;
+            if (target.tagName === 'AUDIO') {
+                const audios = document.getElementsByTagName('audio');
+                for(let i = 0; i < audios.length; i++){
+                    if(audios[i] !== target) audios[i].pause();
+                }
+
+                if (target.readyState === 0) {
+                    target.load();
+                    target.play().catch(err => console.log(err));
+                }
             }
         }, true);
 
