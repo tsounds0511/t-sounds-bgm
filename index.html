@@ -359,7 +359,7 @@
                         <p style="margin:0; font-size:12px; color:#6e6e73; line-height:1.4;">${track.description || '本日のおすすめフリーBGM素材です。'}</p>
                     </div>
                     <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                        <audio controls controlsList="nodownload" preload="none" style="width:200px; height:36px;">
+                        <audio controls controlsList="nodownload" preload="metadata" style="width:200px; height:36px;">
                             <source src="${track.preview_url}" type="audio/mpeg">
                         </audio>
                         <button onclick="toggleKeep('${track.youtube_id}')" class="${keepClass}">${keepText}</button>
@@ -467,7 +467,7 @@
                                 <p class="track-desc">${track.description || '詳細を見る（タップ）'}</p>
                             </div>
                             <div class="track-player">
-                                <audio controls controlsList="nodownload" preload="none" data-index="${idx}">
+                                <audio controls controlsList="nodownload" preload="metadata" data-index="${idx}">
                                     <source src="${track.preview_url}" type="audio/mpeg">
                                 </audio>
                             </div>
