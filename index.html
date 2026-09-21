@@ -155,7 +155,6 @@
         }
         .track-row:hover { background-color: #fafafa; }
 
-        /* サムネイル ＋ ▶ 再生オーバーレイ */
         .thumb-wrap {
             position: relative; border-radius: 6px; overflow: hidden;
             flex-shrink: 0; cursor: pointer;
@@ -301,7 +300,7 @@
 
         <!-- ツールバー -->
         <div class="toolbar">
-            <input type="text" id="search-input" class="search-input" placeholder="曲名・キーワードで検索..." oninput="onSearchInput()">
+            <input type="text" id="search-input" class="search-input" placeholder="曲名・説明文・キーワードで検索..." oninput="onSearchInput()">
             <div class="filters">
                 <button class="filter-btn active" onclick="filterTracks('all', this)">すべて</button>
                 <button class="filter-btn keep-filter" id="filter-keep-btn" onclick="filterTracks('keep', this)">キープ (0)</button>
@@ -341,7 +340,7 @@
     </footer>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         let allTracks = []; 
         let currentCategory = 'all';
         let keptTrackIds = JSON.parse(localStorage.getItem('keptTrackIds') || '[]');
@@ -495,8 +494,10 @@
             });
         }
 
+        /* パワーアップした検索フィルター（曲名・説明文・タグ全文AND検索） */
         function applyFilters() {
-            const keyword = document.getElementById('search-input').value.toLowerCase().trim();
+            const rawInput = document.getElementById('search-input').value.trim();
+            const keywords = rawInput.toLowerCase().split(/\s+/).filter(k => k.length > 0);
             
             const filtered = allTracks.filter(track => {
                 let matchesCat = false;
@@ -504,9 +505,14 @@
                 else if (currentCategory === 'keep') matchesCat = keptTrackIds.includes(track.youtube_id);
                 else matchesCat = track.tags ? track.tags.includes(currentCategory) : false;
 
-                const titleMatch = track.title ? track.title.toLowerCase().includes(keyword) : false;
-                const descMatch = track.description ? track.description.toLowerCase().includes(keyword) : false;
-                return matchesCat && (!keyword || titleMatch || descMatch);
+                const matchesKeywords = keywords.every(kw => {
+                    const titleMatch = track.title ? track.title.toLowerCase().includes(kw) : false;
+                    const descMatch = track.description ? track.description.toLowerCase().includes(kw) : false;
+                    const tagsMatch = track.tags ? track.tags.toLowerCase().includes(kw) : false;
+                    return titleMatch || descMatch || tagsMatch;
+                });
+
+                return matchesCat && matchesKeywords;
             });
 
             renderTrackList(filtered);
