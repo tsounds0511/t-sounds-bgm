@@ -75,7 +75,7 @@
         }
         .single-notice p { margin: 0; font-size: 13px; color: #1d1d1f; font-weight: 500; }
 
-        /* Today's Pick Up (レスポンシブ整列版) */
+        /* Today's Pick Up */
         .featured-section {
             background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
             border: 1px solid rgba(251, 1, 0, 0.15);
@@ -99,15 +99,9 @@
         }
         .shuffle-btn:hover { border-color: #fb0100; color: #fb0100; }
 
-        .featured-card {
-            display: flex; flex-direction: column; gap: 12px;
-        }
-        .featured-top {
-            display: flex; gap: 14px; align-items: flex-start;
-        }
-        .featured-thumb-wrap {
-            width: 100px; height: 56px; border-radius: 8px; flex-shrink: 0;
-        }
+        .featured-card { display: flex; flex-direction: column; gap: 12px; }
+        .featured-top { display: flex; gap: 14px; align-items: flex-start; }
+        .featured-thumb-wrap { width: 100px; height: 56px; border-radius: 8px; flex-shrink: 0; }
         .featured-meta { flex: 1; min-width: 0; }
         .featured-title { margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #1d1d1f; }
         .featured-desc {
@@ -115,9 +109,7 @@
             display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        .featured-bottom {
-            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-        }
+        .featured-bottom { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .featured-audio { flex: 1; min-width: 200px; height: 36px; }
         .featured-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
 
@@ -165,23 +157,19 @@
 
         /* サムネイル ＋ ▶ 再生オーバーレイ */
         .thumb-wrap {
-            position: relative;
-            border-radius: 6px; overflow: hidden;
+            position: relative; border-radius: 6px; overflow: hidden;
             flex-shrink: 0; cursor: pointer;
         }
         .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .thumb-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.35);
-            display: flex; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center;
             transition: background 0.2s;
         }
         .thumb-wrap:hover .thumb-overlay { background: rgba(251, 1, 0, 0.8); }
         .play-icon {
-            width: 0; height: 0;
-            border-style: solid;
-            border-width: 5px 0 5px 8px;
-            border-color: transparent transparent transparent #ffffff;
+            width: 0; height: 0; border-style: solid;
+            border-width: 5px 0 5px 8px; border-color: transparent transparent transparent #ffffff;
             margin-left: 2px;
         }
 
@@ -249,11 +237,9 @@
         footer { text-align: center; padding: 40px 20px 20px 20px; font-size: 12px; color: #86868b; }
         footer a { color: #6e6e73; text-decoration: none; margin: 0 8px; }
 
-        /* レスポンシブ（スマホ最適化） */
+        /* レスポンシブ */
         @media (max-width: 600px) {
-            .featured-bottom {
-                flex-direction: column; align-items: stretch; gap: 10px;
-            }
+            .featured-bottom { flex-direction: column; align-items: stretch; gap: 10px; }
             .featured-audio { width: 100%; min-width: 0; }
             .featured-actions { justify-content: flex-end; width: 100%; }
         }
@@ -300,7 +286,7 @@
 
         <!-- 個別アクセス時の案内バナー -->
         <div id="single-notice" class="single-notice" style="display: none;">
-            <p>指定された楽曲を表示しています</p>
+            <p id="single-notice-text">指定された楽曲を表示しています</p>
             <button class="btn-sm btn-yt" onclick="clearSingleFilter()">すべての曲を見る</button>
         </div>
 
@@ -355,7 +341,7 @@
     </footer>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1AIk6SzccIKCAlRVyAh_UTw3rrbtHdM449ELYti/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby2O2yfcWU9Z2ZADr-Mf81gbuSJB1Alk6SzccIKCAIRVyAh_UTw3rrbtHdM449ELYti/exec';
         let allTracks = []; 
         let currentCategory = 'all';
         let keptTrackIds = JSON.parse(localStorage.getItem('keptTrackIds') || '[]');
@@ -375,7 +361,14 @@
                 if (targetVid) {
                     const filtered = allTracks.filter(track => track.youtube_id === targetVid);
                     document.getElementById('single-notice').style.display = 'flex';
-                    renderTrackList(filtered);
+                    if (filtered.length > 0) {
+                        document.getElementById('single-notice-text').innerText = '指定された楽曲を表示しています';
+                        renderTrackList(filtered);
+                    } else {
+                        document.getElementById('single-notice-text').innerText = '指定された楽曲が見つかりませんでした。すべての曲を表示しています';
+                        renderTrackList(allTracks);
+                        renderRandomFeatured();
+                    }
                 } else {
                     renderTrackList(allTracks);
                     renderRandomFeatured();
@@ -428,7 +421,6 @@
             document.getElementById('featured-container').style.display = 'block';
         }
 
-        /* ページ最上部に戻らないピンポイントキープ処理 */
         function toggleKeep(youtubeId) {
             const index = keptTrackIds.indexOf(youtubeId);
             if (index === -1) { 
@@ -439,13 +431,11 @@
             localStorage.setItem('keptTrackIds', JSON.stringify(keptTrackIds));
             updateKeepBadgeCount();
 
-            // キープタブ閲覧時のみリストを絞り込み再構築（スクロール位置維持）
             if (currentCategory === 'keep') {
                 const currentScroll = window.scrollY;
                 applyFilters();
                 window.scrollTo(0, currentScroll);
             } else {
-                // 通常タブ時はリスト全体の再描画を回避し、対象ボタンのみをピンポイント更新
                 const isKept = keptTrackIds.includes(youtubeId);
                 document.querySelectorAll(`button[data-keep-id="${youtubeId}"]`).forEach(btn => {
                     if (isKept) {
